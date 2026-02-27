@@ -9,8 +9,8 @@ export class AuthService {
   ) {}
 
   public login(id: string, email: string, password: string) {
-    const user = this.userService.findOneById('1234');
-    console.log('Logged in user:::', user);
+    // const user = this.userService.findOneById('1234');
+    // console.log('Logged in user:::', user);
     return 'SAMPLE TOKEN';
   }
 

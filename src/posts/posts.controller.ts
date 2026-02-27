@@ -1,8 +1,8 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
-  Param,
   ParseIntPipe,
   Patch,
   Post,
@@ -19,8 +19,8 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Get('/{:userId}')
-  public getPosts(@Param('userId') userId: string) {
-    return this.postsService.findAll(userId);
+  public getPosts() {
+    return this.postsService.findAll();
   }
 
   @ApiOperation({
@@ -45,17 +45,17 @@ export class PostsController {
   })
   @Patch()
   public updatePost(@Body() patchPostDto: PatchPostDto) {
-    console.log(patchPostDto);
+    return this.postsService.update(patchPostDto);
   }
 
   @ApiOperation({
-    summary: 'Delektes an existing blog post',
+    summary: 'Deletes an existing blog post',
   })
   @ApiResponse({
     status: 200,
     description: 'A 200 response if the post is deleted successfully',
   })
-  @Patch()
+  @Delete()
   public deletePost(@Query('id', ParseIntPipe) id: number) {
     return this.postsService.delete(id);
   }
