@@ -15,6 +15,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import type { ConfigType } from '@nestjs/config';
 import profileConfig from '../config/profile.config';
+import { UsersCreateManyProviderTs } from './users-create-many.provider.ts';
+import { CreateManyUsersDto } from '../dtos/create-many-users.dto';
 
 /**
  * Class to connect to users table and perform business operations
@@ -44,6 +46,11 @@ export class UserService {
      */
     @InjectRepository(User)
     private userRepository: Repository<User>,
+
+    /**
+     * Injecting createManyUsers Provider
+     */
+    private usersCreateManyProvider: UsersCreateManyProviderTs,
   ) {}
 
   public async createUser(createUserDto: CreateUserDto) {
@@ -99,7 +106,7 @@ export class UserService {
     page: number,
   ) {
     // const isAuth = this.authService.isAuth();
-
+    console.log(getUsersParamsDto, limit, page);
     throw new HttpException(
       {
         status: HttpStatus.MOVED_PERMANENTLY,
@@ -157,5 +164,9 @@ export class UserService {
     }
 
     return user;
+  }
+
+  public async createMany(createManyUsersDto: CreateManyUsersDto) {
+    return await this.usersCreateManyProvider.createMany(createManyUsersDto);
   }
 }
