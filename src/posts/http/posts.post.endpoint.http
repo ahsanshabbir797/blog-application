@@ -5,7 +5,7 @@ Content-Type: application/json
 {
   "title": "What's new with NestJS",
   "postType": "post",
-  "slug": "new-with-nest-js-55",
+  "slug": "new-with-nest-js-1",
   "status": "draft",
   "content": "post-content",
   "schema": "{\r\n    \"@context\": \"https:\/\/schema.org\",\r\n    \"@type\": \"Person\"\r\n  }",

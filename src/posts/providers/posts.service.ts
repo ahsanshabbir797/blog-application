@@ -48,16 +48,17 @@ export class PostsService {
     }
   }
 
-  public async findAll() {
-    return await this.postsRepository
-      .find
-      // {
-      // relations: {
-      //   metaOptions: true,
-      //   author: true,
-      // }, //alternately we can got for eager loading on the relevant relation in the entity
-      // }
-      ();
+  public async findAll(userId: string) {
+    console.log(userId);
+    const posts = await this.postsRepository.find({
+      relations: {
+        metaOptions: true,
+        //author: true,
+        // tags: true,
+      }, //alternately we can got for eager loading on the relevant relation in the entity
+    });
+
+    return posts;
   }
 
   public async update(patchPostDto: PatchPostDto) {
