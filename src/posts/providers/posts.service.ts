@@ -12,6 +12,9 @@ import { MetaOption } from 'src/meta-options/meta-option.entity';
 import { TagsService } from 'src/tags/providers/tags.service';
 import { PatchPostDto } from '../dtos/patch-post.dto';
 import { Tag } from 'src/tags/tag.entity';
+import { GetPostsDto } from 'src/users/dtos/get-posts.dto';
+import { PaginationProvider } from 'src/common/pagination/providers/pagination.provider';
+import { Paginated } from 'src/common/pagination/paginated.interface';
 
 @Injectable()
 export class PostsService {
@@ -31,6 +34,10 @@ export class PostsService {
      * Inject tags service
      */
     private readonly tagsService: TagsService,
+    /**
+     * Inject pagination provider
+     */
+    private readonly paginationProvider: PaginationProvider,
   ) {}
 
   public async create(createPostDto: CreatePostDto) {
@@ -48,16 +55,15 @@ export class PostsService {
     }
   }
 
-  public async findAll(userId: string) {
+  public async findAll(
+    postQuery: GetPostsDto,
+    userId: string,
+  ): Promise<Paginated<Post>> {
     console.log(userId);
-    const posts = await this.postsRepository.find({
-      relations: {
-        metaOptions: true,
-        //author: true,
-        // tags: true,
-      }, //alternately we can got for eager loading on the relevant relation in the entity
-    });
-
+    const posts = await this.paginationProvider.paginateQuery(
+      postQuery,
+      this.postsRepository,
+    );
     return posts;
   }
 
