@@ -1,21 +1,20 @@
 # {\r\n    \"@context\": \"https:\/\/schema.org\",\r\n    \"@type\": \"Person\"\r\n  }
 POST http://localhost:3000/posts
 Content-Type: application/json
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEwLCJlbWFpbCI6InN0ZXJvbmVAdGVzdC5jb20iLCJpYXQiOjE3NzMzMDU4NjcsImV4cCI6MTc3MzMwOTQ2NywiYXVkIjoibG9jYWxob3N0OjMwMDAiLCJpc3MiOiJsb2NhbGhvc3Q6MzAwMCJ9.5qxQMS3TU0PDT9tAibPnEHYGQ04_QxmGzQmHZnedFdo
 {
   "title": "What's new with NestJS",
   "postType": "post",
-  "slug": "new-with-nest-js-1",
+  "slug": "new-with-nest-js-1212",
   "status": "draft",
   "content": "post-content",
   "schema": "{\r\n    \"@context\": \"https:\/\/schema.org\",\r\n    \"@type\": \"Person\"\r\n  }",
   "featuredImageUrl": "http://localhost.com/images/image1.jpg",
-  "publishOn": "2024-03-16T07:46:32+0000",
+  "publishOn": "2024-03-16T07:46:32+00:00",
   "tags": [
     1
   ],
   "metaOptions": {
     "metaValue": "{\"sidebar-enabled\": true, \"footerActive\":true}"
-  },
-  "authorId": 1 
+  } 
 }

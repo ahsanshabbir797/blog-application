@@ -1,8 +1,9 @@
 import {
   IsArray,
+  IsDate,
   IsEnum,
   IsInt,
-  IsISO8601,
+  // IsISO8601,
   IsJSON,
   IsNotEmpty,
   IsOptional,
@@ -91,7 +92,9 @@ export class CreatePostDto {
     example: '2024-03-16T07:46:32+0000',
   })
   @IsOptional()
-  @IsISO8601()
+  @IsDate()
+  // @IsISO8601()
+  // @Type(() => Date)
   publishOn?: Date;
 
   @ApiPropertyOptional({
@@ -114,12 +117,17 @@ export class CreatePostDto {
   @Type(() => CreatePostMetaOptionsDto)
   metaOptions?: CreatePostMetaOptionsDto | null;
 
-  @ApiProperty({
-    type: 'integer',
-    required: true,
-    example: 1,
-  })
-  @IsNotEmpty()
-  @IsInt()
-  authorId: number;
+  // @ApiProperty({
+  //   type: 'integer',
+  //   required: true,
+  //   example: 1,
+  // })
+  // @IsNotEmpty()
+  // @IsInt()
+  // authorId: number;
+  // @ApiProperty({
+  //   type: 'boolean' ,
+  //   required: true,
+  //   example: 1,
+  // })
 }
