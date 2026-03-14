@@ -116,8 +116,6 @@ export class UserService {
    * Find a single user using the ID of the user
    */
   public async findOneById(id: number): Promise<User | null> {
-    console.log('User number:::', id);
-    console.log('Type of number user:::', typeof id);
     let user: User | null = null;
     try {
       user = await this.userRepository.findOneBy({ id });

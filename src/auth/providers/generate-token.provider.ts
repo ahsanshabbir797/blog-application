@@ -2,6 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { type ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import jwtConfig from '../config/jwt.config';
+import { User } from 'src/users/user.entity';
+import { IActiveUserData } from '../interfaces/active-user-data.interface';
 
 @Injectable()
 export class GenerateTokenProvider {
@@ -17,19 +19,36 @@ export class GenerateTokenProvider {
     @Inject(jwtConfig.KEY)
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
   ) {}
-  public async generateToken(sub: number, expiresIn: number, payload: any) {
-    const accessToken = await this.jwtService.signAsync(
+  public async signToken<T>(userId: number, expiresIn: number, payload?: T) {
+    return await this.jwtService.signAsync(
       {
-        sub: sub,
+        sub: userId,
         ...payload,
       },
       {
         audience: this.jwtConfiguration.audience,
         issuer: this.jwtConfiguration.issuer,
         secret: this.jwtConfiguration.secret,
-        expiresIn: this.jwtConfiguration.accessTokenTtl,
+        expiresIn,
       },
     );
-    return accessToken;
+  }
+
+  public async generateToken(user: User) {
+    const [accessToken, refreshToken] = await Promise.all([
+      this.signToken<Partial<IActiveUserData>>(
+        user.id,
+        this.jwtConfiguration.accessTokenTtl,
+        {
+          email: user.email,
+        },
+      ),
+      this.signToken(user.id, this.jwtConfiguration.refreshTokenTtl),
+    ]);
+
+    return {
+      accessToken,
+      refreshToken,
+    };
   }
 }
