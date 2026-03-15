@@ -10,6 +10,8 @@ import { UsersCreateManyProviderTs } from './providers/users-create-many.provide
 import { CreateUserProvider } from './providers/create-user.provider';
 import { FindonebyemailProvider } from './providers/findonebyemail.provider';
 import { JwtModule } from '@nestjs/jwt';
+import { FindOneByGoogleIdProvider } from './providers/find-one-by-google-id.provider';
+import { CreateGoogleUserProvider } from './providers/create-google-user.provider';
 import jwtConfig from 'src/auth/config/jwt.config';
 
 @Module({
@@ -19,6 +21,8 @@ import jwtConfig from 'src/auth/config/jwt.config';
     UsersCreateManyProviderTs,
     CreateUserProvider,
     FindonebyemailProvider,
+    FindOneByGoogleIdProvider,
+    CreateGoogleUserProvider,
   ],
   exports: [UserService],
   imports: [

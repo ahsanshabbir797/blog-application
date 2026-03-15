@@ -44,7 +44,7 @@ export class SignInProvider {
       //3.Compare the password hashes
       hasMatched = await this.hashingProvider.comparePassword(
         signInDto.password,
-        user.password,
+        user.password ?? '',
       );
     } catch (error) {
       throw new RequestTimeoutException(error, {
