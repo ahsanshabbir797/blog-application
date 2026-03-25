@@ -8,6 +8,8 @@ import {
   Query,
   ParseIntPipe,
   DefaultValuePipe,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { GetUsersParamsDto } from './dtos/get-users-param.dto';
@@ -53,11 +55,13 @@ export class UsersController {
   }
 
   @Auth(AuthType.None)
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   public createUser(
     @Body() createUserDto: CreateUserDto,
     // @Body('email') createUserDto: any,
   ) {
+    console.log('create user controller');
     return this.usersService.createUser(createUserDto);
   }
 
