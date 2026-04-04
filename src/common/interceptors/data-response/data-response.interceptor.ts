@@ -12,7 +12,7 @@ export class DataResponseInterceptor implements NestInterceptor {
   constructor(private configService: ConfigService) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    console.log('BEFORE');
+    // console.log('BEFORE');
     return next.handle().pipe(
       map((data) => ({
         apiVersion: this.configService.get<string>('appConfig.apiVersion'),
