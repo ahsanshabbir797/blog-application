@@ -1,145 +1,37 @@
-import {
-  BadRequestException,
-  Injectable,
-  RequestTimeoutException,
-} from '@nestjs/common';
-import { UserService } from 'src/users/providers/users.service';
-import { Post } from '../post.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable, RequestTimeoutException } from '@nestjs/common';
+import { UsersService } from 'src/users/providers/users.service';
+import { Post } from '../post.schema';
 import { CreatePostDto } from '../dtos/create-post.dto';
-import { MetaOption } from 'src/meta-options/meta-option.entity';
-import { TagsService } from 'src/tags/providers/tags.service';
-import { PatchPostDto } from '../dtos/patch-post.dto';
-import { Tag } from 'src/tags/tag.entity';
-import { GetPostsDto } from 'src/users/dtos/get-posts.dto';
-import { PaginationProvider } from 'src/common/pagination/providers/pagination.provider';
-import { Paginated } from 'src/common/pagination/paginated.interface';
-import { CreatePostProvider } from './create-post.provider';
-import { IActiveUserData } from 'src/auth/interfaces/active-user-data.interface';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class PostsService {
   constructor(
-    private readonly usersService: UserService,
-    /**
-     * Inject postsRepository
+    /*
+     * Injecting Users Service
      */
-    @InjectRepository(Post)
-    private readonly postsRepository: Repository<Post>,
-    /**
-     * Inject metaOptionsRepository
+    private readonly usersService: UsersService,
+    /*
+     * Injecting Post Model
      */
-    @InjectRepository(MetaOption)
-    private readonly metaOptionsRepository: Repository<MetaOption>,
-    /**
-     * Inject tags service
-     */
-    private readonly tagsService: TagsService,
-    /**
-     * Inject pagination provider
-     */
-    private readonly paginationProvider: PaginationProvider,
-    /**
-     * Inject create-post provider
-     */
-    private readonly createPostProvider: CreatePostProvider,
+    @InjectModel(Post.name)
+    private readonly PostModel: Model<Post>,
   ) {}
 
-  public async create(createPostDto: CreatePostDto, user: IActiveUserData) {
-    return await this.createPostProvider.create(createPostDto, user);
-  }
-
-  public async findAll(
-    postQuery: GetPostsDto,
-    userId: string,
-  ): Promise<Paginated<Post>> {
-    console.log(userId);
-    const posts = await this.paginationProvider.paginateQuery(
-      postQuery,
-      this.postsRepository,
-    );
-    return posts;
-  }
-
-  public async update(patchPostDto: PatchPostDto) {
-    //find the tags
-    let tags: Tag[] | null = null;
-    let post: Post | null = null;
+  public async create(createPostDto: CreatePostDto) {
     try {
-      tags = await this.tagsService.findMultiple(patchPostDto.tags ?? []);
+      const newPost = new this.PostModel(createPostDto);
+      return newPost.save();
     } catch (error) {
-      throw new RequestTimeoutException(
-        'Unable to process your request at the moment. Please try later.',
-        {
-          description: 'Error connecting to the database',
-          cause: error,
-        },
-      );
+      throw new RequestTimeoutException(error);
     }
-
-    //check if the tags requested are equal to tags received
-    if (!tags || tags.length != patchPostDto.tags?.length) {
-      throw new BadRequestException(
-        'Please check your tag ids and ensure they are correct',
-      );
-    }
-
-    //find the post
-    try {
-      post = await this.postsRepository.findOne({
-        where: { id: patchPostDto.id },
-      });
-    } catch (error) {
-      throw new RequestTimeoutException(
-        'Unable to process your request at the moment. Please try later.',
-        {
-          description: 'Error connecting to the database',
-          cause: error,
-        },
-      );
-    }
-
-    if (!post) {
-      throw new BadRequestException('The post id does not exist');
-    }
-
-    //update the properties
-    if (post) {
-      post.title = patchPostDto.title ?? post.title;
-      post.content = patchPostDto.title ?? post.title;
-      post.status = patchPostDto.status ?? post.status;
-      post.postType = patchPostDto.postType ?? post.postType;
-      post.slug = patchPostDto.slug ?? post.slug;
-      post.featuredImageUrl =
-        patchPostDto.featuredImageUrl ?? post.featuredImageUrl;
-      post.publishOn = patchPostDto.publishOn ?? post.publishOn;
-      //assign the tags
-      post.tags = tags;
-
-      try {
-        await this.postsRepository.save(post);
-      } catch (error) {
-        throw new RequestTimeoutException(
-          'Unable to process your request at the moment. Please try later.',
-          {
-            description: 'Error connecting to the database',
-            cause: error,
-          },
-        );
-      }
-
-      return post;
-    }
-    //save the post & return
   }
 
-  public async delete(id: number) {
-    await this.postsRepository.delete(id);
-
-    return {
-      isDeleted: true,
-      id,
-    };
+  public async findAll() {
+    return await this.PostModel.find()
+      .populate('tags')
+      .populate('author')
+      .exec();
   }
 }

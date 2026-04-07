@@ -1,10 +1,7 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsJSON,
   IsNotEmpty,
-  IsOptional,
   IsString,
-  IsUrl,
   Matches,
   MaxLength,
   MinLength,
@@ -16,7 +13,7 @@ export class CreateTagDto {
   @MinLength(3)
   @MaxLength(256)
   @IsNotEmpty()
-  name: string;
+  name!: string;
 
   @ApiProperty({
     description: "For Example - 'my-url'",
@@ -29,21 +26,5 @@ export class CreateTagDto {
     message:
       'A slug should be all small letters and uses only "-" and without spaces. For example "my-url"',
   })
-  slug: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  description?: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsJSON()
-  schema?: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsUrl()
-  @MaxLength(1024)
-  featuredImageUrl?: string;
+  slug!: string;
 }
