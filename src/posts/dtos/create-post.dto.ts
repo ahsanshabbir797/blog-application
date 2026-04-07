@@ -28,7 +28,7 @@ export class CreatePostDto {
   @IsNotEmpty()
   @MinLength(4)
   @MaxLength(512)
-  title: string;
+  title!: string;
 
   @ApiProperty({
     enum: PostType,
@@ -36,7 +36,7 @@ export class CreatePostDto {
   })
   @IsNotEmpty()
   @IsEnum(PostType)
-  postType: PostType;
+  postType!: PostType;
 
   @ApiProperty({
     description: "For Example - 'my-url'",
@@ -49,7 +49,7 @@ export class CreatePostDto {
     message:
       'A slug should be all small letters and uses only "-" and without spaces. For example "my-url"',
   })
-  slug: string;
+  slug!: string;
 
   @ApiProperty({
     enum: PostStatus,
@@ -57,7 +57,7 @@ export class CreatePostDto {
   })
   @IsNotEmpty()
   @IsEnum(PostStatus)
-  status: PostStatus;
+  status!: PostStatus;
 
   @ApiPropertyOptional({
     description: 'This is the content of the post',
