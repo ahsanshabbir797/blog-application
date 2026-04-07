@@ -1,4 +1,5 @@
 import { DataSource } from 'typeorm';
+import { join } from 'path';
 
 export default new DataSource({
   type: 'postgres',
@@ -7,6 +8,7 @@ export default new DataSource({
   username: 'klement',
   password: 'attlee',
   database: 'database',
-  entities: ['**/*.entity.ts'],
-  migrations: ['migrations/*.ts'],
+  // Use join to ensure the path is absolute and valid
+  entities: [join(__dirname, '**', '*.entity.{ts,js}')],
+  migrations: [join(__dirname, 'migrations', '*{.ts,.js}')],
 });
